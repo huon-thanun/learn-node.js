@@ -1,0 +1,3 @@
+hello node.js
+new message by append
+new message by append
