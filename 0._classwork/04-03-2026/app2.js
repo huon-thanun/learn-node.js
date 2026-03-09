@@ -25,14 +25,15 @@ const server = http.createServer(async (req, res) => {
     fs.readFile(path, 'utf8', (err, data) => {
         if (err) console.log(err);
 
-        // Convert text string back into a usable JavaScript object
         const parsed = JSON.parse(data);
 
-        // Loop through the data to build an HTML list
         let listItems = '';
         parsed.forEach(item => {
             listItems += `<li>${item.id} - ${item.name} - ${item.username} - ${item.email} - ${item.address.city}</li>`;
         });
+
+        console.log(listItems);
+        
 
         const datas = `<ul>${listItems}</ul>`;
 
