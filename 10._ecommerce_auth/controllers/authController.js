@@ -2,7 +2,7 @@ const authService = require('../services/authService')
 
 const resgister = async (req, res) => {
     try {
-        let result = authService.resgister(req.body);
+        let result = await authService.resgister(req.body);
 
         return res.json({
             result: true,

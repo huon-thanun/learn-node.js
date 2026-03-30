@@ -1,11 +1,11 @@
 const authService = require('../services/authService');
 
-const hideUserPassword = (user) => {
-    if (!user) return user;
-    const { password, ...hidePassword } = user;
+// const hideUserPassword = (user) => {
+//     if (!user) return user;
+//     const { password, ...hidePassword } = user;
 
-    return hidePassword;
-}
+//     return hidePassword;
+// }
 
 const register = async (req, res) => {
     try {
@@ -29,12 +29,12 @@ const register = async (req, res) => {
 const getAll = async (req, res) => {
     try {
         const rows = await authService.getAll();
-        const safeRows = rows.map((row) => hideUserPassword(row));
+        // const safeRows = rows.map((row) => hideUserPassword(row));
 
         return res.json({
             result: true,
             msg: 'Get All Users Successfully',
-            data: safeRows
+            data: rows
         });
     } catch (err) {
         console.log(err);
@@ -55,7 +55,8 @@ const getSingleUser = async (req, res) => {
         return res.json({
             result: true,
             msg: 'Get A User Successfully.',
-            data: hideUserPassword(row[0])
+            // data: hideUserPassword(row[0]),
+            data: row[0]
         })
 
     } catch (err) {
@@ -75,4 +76,22 @@ const getSingleUser = async (req, res) => {
     }
 }
 
-module.exports = { register, getAll, getSingleUser }
+const login = async (req, res) => {
+    try {
+        const result = await authService.login(req.body);
+        // console.log("resul in conttroller : ", result);
+
+        res.json({
+            result : true, 
+            message : "Login Successfully",
+            data : result
+        })
+    } catch (error) {
+        res.json({
+            result : false,
+            message: error.message,
+        });
+    }
+}
+
+module.exports = { register, getAll, getSingleUser, login }
