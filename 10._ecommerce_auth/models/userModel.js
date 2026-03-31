@@ -1,7 +1,7 @@
 const pool = require('../configs/db');
 
 const findByEmail = async (email) => {
-    let [row] = await pool.query('select email from users where email = ? ', [email]);
+    let [row] = await pool.query('select id, name, email, password, phone, address from users where email = ? ', [email]);
 
     return row;
 }
@@ -12,12 +12,12 @@ const getByID = async (id) => {
     return row;
 }
 
- const create = async (body) => {
+const create = async (body) => {
     let arr = [body.name, body.email, body.password];
     let [result] = await pool.query('insert into users (name, email, password) values (?, ?, ?)', arr);
 
     return result.insertId;
- }
+}
 
 
 module.exports = { findByEmail, create, getByID }
