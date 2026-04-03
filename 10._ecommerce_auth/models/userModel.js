@@ -7,7 +7,7 @@ const findByEmail = async (email) => {
 }
 
 const getByID = async (id) => {
-    let [row] = await pool.query('select id, name, email, phone, address from users where id = ? ', [id]);
+    let [row] = await pool.query('select id, name, email, phone, address, token from users where id = ? ', [id]);
 
     return row;
 }
@@ -19,5 +19,8 @@ const create = async (body) => {
     return result.insertId;
 }
 
+const addToken = async (token, id) => {
+    await pool.query('update users set token = ? where id = ?', [token, id]);
+}
 
-module.exports = { findByEmail, create, getByID }
+module.exports = { findByEmail, create, getByID, addToken }

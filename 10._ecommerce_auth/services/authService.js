@@ -54,17 +54,22 @@ const login = async (body) => {
         { id: userSecure[0].id, email: userSecure[0].email },
         jwtConfig.secret,
         { expiresIn: jwtConfig.expireIn }
-    )
+    );
+
+    await user.addToken(token, userSecure[0].id);
+    const row = await user.getByID(userSecure[0].id);
+
+    return row;
 
     // console.log(token);
-    return {
-        id: userSecure[0].id,
-        name: userSecure[0].name,
-        email: userSecure[0].email,
-        phone: userSecure[0].phone,
-        address: userSecure[0].address,
-        token: token
-    }
+    // return { // ត្រូវបានជំនួសដោយ return row;
+    //     id: userSecure[0].id,
+    //     name: userSecure[0].name,
+    //     email: userSecure[0].email,
+    //     phone: userSecure[0].phone,
+    //     address: userSecure[0].address,
+    //     token: token
+    // }
 }
 
 const getMe = async (id) => {

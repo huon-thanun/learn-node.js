@@ -1,5 +1,4 @@
 const authService = require('../services/authService');
-const authModel = require('../models/userModel')
 
 const resgister = async (req, res) => {
     try {
@@ -44,7 +43,9 @@ const login = async (req, res) => {
 
 const getMe = async (req, res) => {
      try {
-        const result = await authService.getMe(req.user.id);
+        // console.log(req.me);
+        
+        const [result] = await authService.getMe(req.me.id);
 
         return res.json({
             result : true,
