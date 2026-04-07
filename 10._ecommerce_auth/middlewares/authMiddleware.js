@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken');
-
+const user = require('../models/userModel');
 const jwtConfig = require('../configs/jwt');
 
-const isLogin = (req, res, next) => {
+const isLogin = async (req, res, next) => {
     try {
         const authHeader = req.headers.authorization;
         console.log(authHeader);
@@ -27,6 +27,13 @@ const isLogin = (req, res, next) => {
         let decode = jwt.verify(token, jwtConfig.secret);
         console.log(decode);
 
+        let userInfo = await user.getByToken(token);
+        console.log(userInfo);
+        
+        if (userInfo.length == 0){
+            throw new Error('Invalid or Expired Token.');
+        }
+
         // req.user = decode; //user or me just a variable
         req.me = decode;
 
@@ -37,9 +44,9 @@ const isLogin = (req, res, next) => {
         
         return res.json({
             result: false,
-            msg: 'Insernal Server Error.'
+            msg: err.message
         })
     }
 }
 
-module.exports = { isLogin, }
+module.exports = { isLogin }

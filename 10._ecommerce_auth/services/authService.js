@@ -78,4 +78,9 @@ const getMe = async (id) => {
     return row;
 }
 
-module.exports = { resgister, login, getMe }
+const logout = async (id) => {
+    await user.removeToken(id);
+}
+
+
+module.exports = { resgister, login, getMe, logout }

@@ -1,3 +1,4 @@
+const { get } = require('../routes/authRoute');
 const authService = require('../services/authService');
 
 const resgister = async (req, res) => {
@@ -55,10 +56,29 @@ const getMe = async (req, res) => {
     } catch (err) {
         console.log(err);
         return res.json({
-            result : true,
-            msg : err.message,
+            result : false,
+            msg : err.message
         })
     }
 }
 
-module.exports = { resgister, login, getMe}
+const logout = async (req, res) => {
+    
+    try{
+        console.log(req.me);
+        await authService.logout(req.me.id)
+        
+        return res.json({
+            result: true,
+            msg: 'Logout Successfully.'
+        })
+    } catch(err) {
+        console.log(err);
+        return res.json({
+            result: false,
+            msg: 'Internal Server Error.'
+        })
+    }
+}
+
+module.exports = { resgister, login, getMe, logout}
