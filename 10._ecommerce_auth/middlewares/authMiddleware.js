@@ -35,7 +35,7 @@ const isLogin = async (req, res, next) => {
         }
 
         // req.user = decode; //user or me just a variable
-        req.me = decode;
+        req.user = decode;
 
         next();
         
@@ -44,7 +44,7 @@ const isLogin = async (req, res, next) => {
         
         return res.json({
             result: false,
-            msg: err.message
+            msg: 'Invalid or Expired Token'
         })
     }
 }

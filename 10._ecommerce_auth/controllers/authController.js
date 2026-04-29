@@ -1,17 +1,16 @@
-const { get } = require('../routes/authRoute');
 const authService = require('../services/authService');
 
-const resgister = async (req, res) => {
+const register = async (req, res) => {
     try {
-        let result = await authService.resgister(req.body);
+        let result = await authService.register(req.validData);
 
         return res.json({
             result: true,
-            msg: 'Regoster Successfully.',
+            msg: 'Register Successfully.',
             data: result
         })
     }
-    catch(err){
+    catch (err) {
         console.log(err);
         return res.json({
             result: false,
@@ -20,11 +19,11 @@ const resgister = async (req, res) => {
     }
 
     // return result;
-    
+
 };
 
 const login = async (req, res) => {
-    try{
+    try {
         const result = await authService.login(req.body);
         // const row = await authModel.getByID(req.params.id)
 
@@ -33,8 +32,8 @@ const login = async (req, res) => {
             msg: 'Login Successfully.',
             data: result
         })
-        
-    }catch(err){
+
+    } catch (err) {
         return res.json({
             result: false,
             msg: err.message
@@ -43,42 +42,82 @@ const login = async (req, res) => {
 };
 
 const getMe = async (req, res) => {
-     try {
+    try {
         // console.log(req.me);
-        
-        const [result] = await authService.getMe(req.me.id);
+
+        const row = await authService.getMe(req.user.id);
 
         return res.json({
-            result : true,
-            msg : 'Get Profile Successfully',
-            data : result
+            result: true,
+            msg: 'Get Profile Successfully',
+            data: row
         })
     } catch (err) {
-        console.log(err);
+        // console.log(err);
         return res.json({
-            result : false,
-            msg : err.message
+            result: false,
+            msg: err.message
         })
     }
 }
 
 const logout = async (req, res) => {
-    
-    try{
-        console.log(req.me);
-        await authService.logout(req.me.id)
-        
+
+    try {
+        console.log(req.user);
+        await authService.logout(req.user.id)
+
         return res.json({
             result: true,
             msg: 'Logout Successfully.'
         })
-    } catch(err) {
+    } catch (err) {
         console.log(err);
         return res.json({
             result: false,
-            msg: 'Internal Server Error.'
+            msg: err.message
+        })
+    }
+};
+
+const verifyEmail = async (req, res) => {
+    try {
+        // console.log('Verify Email.');
+        console.log(req.query.token);
+
+        const result = await authService.verifyEmail(req.query.token);
+
+        return res.json({
+            result: true,
+            msg: result.message,
+            data: []
+        })
+
+    } catch (err) {
+        console.log(err);
+        return res.json({
+            result: false,
+            msg: err.message
+        })
+
+    }
+}
+
+const resendVerificationEmail = async (req, res) => {
+    try {
+        const result = await authService.resendVerificationEmail(req.body.email);
+        return res.json({
+            result: true,
+            msg: result.message,
+            data: []
+        })
+    }catch (err) {
+        console.log(err);
+        return res.json({
+            result: false,
+            msg: err.message
         })
     }
 }
 
-module.exports = { resgister, login, getMe, logout}
+module.exports = { register, login, getMe, logout, verifyEmail, resendVerificationEmail }

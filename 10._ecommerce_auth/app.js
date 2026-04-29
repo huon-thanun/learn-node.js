@@ -5,6 +5,8 @@ const authRoute = require('./routes/authRoute');
 const app = express();
 app.use(express.json());
 
-app.use(authRoute)
+require('dotenv').config();
 
-app.listen(3000, () => console.log('Server Running On Port 3000'));
+app.use('/api', authRoute)
+
+app.listen(process.env.PORT, () => console.log('Server Running On Port ' + process.env.PORT));

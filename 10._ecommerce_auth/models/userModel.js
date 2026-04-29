@@ -1,20 +1,20 @@
 const pool = require('../configs/db');
 
 const findByEmail = async (email) => {
-    let [row] = await pool.query('select id, name, email, password, phone, address from users where email = ? ', [email]);
+    let [row] = await pool.query('select id, name, email, password, phone, address, is_verified from users where email = ?', [email]);
 
     return row;
 }
 
 const getByID = async (id) => {
-    let [row] = await pool.query('select id, name, email, phone, address, token from users where id = ? ', [id]);
+    let [row] = await pool.query('select id, name, email, phone, address, token from users where id = ?', [id]);
 
     return row;
 }
 
 const create = async (body) => {
-    let arr = [body.name, body.email, body.password];
-    let [result] = await pool.query('insert into users (name, email, password) values (?, ?, ?)', arr);
+    let arr = [body.name, body.email, body.password, body.verificationToken, body.verificationExpired];
+    let [result] = await pool.query('insert into users (name, email, password, verification_token, verification_expires) values (?,?,?,?,?)', arr);
 
     return result.insertId;
 }
@@ -28,9 +28,24 @@ const removeToken = async (id) => {
 }
 
 const getByToken = async (token) => {
-    let [row]= await pool.query('select id, name, email, phone, address, token from users where token = ? ', [token]);
+    let [row] = await pool.query('select token from users where token = ?', [token]);
 
     return row;
 }
 
-module.exports = { findByEmail, create, getByID, addToken, removeToken, getByToken }
+const findByVerificationEmail = async (token) => {
+    let [row] = await pool.query('select id, name, email, phone, address, token, is_verified, verification_token, verification_expires from users where verification_token = ?', [token]);
+
+    return row
+}
+
+const verifiEmail = async (id) => {
+    await pool.query('update users set is_verified = 1 where id = ?', [id]);
+}
+
+const resendVerificationEmail = async (body) => {
+    let arr = [body.verificationToken, body.verificationExpired, body.id];
+    await pool.query('update users set verification_token = ?, verification_expires = ? where id = ?', arr)
+}
+
+module.exports = { findByEmail, create, getByID, addToken, removeToken, getByToken, findByVerificationEmail, verifiEmail, resendVerificationEmail }
